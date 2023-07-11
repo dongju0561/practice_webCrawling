@@ -8,6 +8,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
+def makeBSOjc(url):
+    html = urlopen(url)  
+    bsObject = BeautifulSoup(html, "html.parser")
+    return bsObject
+
 driver = webdriver.Chrome()
 driver.implicitly_wait(2)
 driver.get('https://search.daum.net/search?w=img&nil_search=btn&DA=NTB&enc=utf8&q=%EA%B0%95%EC%95%84%EC%A7%80')
@@ -19,6 +24,10 @@ secondImage = driver.find_element(By.CSS_SELECTOR, '#imageColl > div.cont_img > 
 secondImage.click()
 time.sleep(0.5)
 print(driver.current_url)
+html = urlopen(driver.current_url)
+obj = BeautifulSoup(html, "html.parser")
+print(obj)
+
 print(driver.title)
 time.sleep(3)
 driver.quit()

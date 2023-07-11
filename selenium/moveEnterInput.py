@@ -23,10 +23,12 @@ text_field.send_keys("shu") #검색창 입력
 text_field.submit() #검색
 
 
-link = driver.find_elements(By.CSS_SELECTOR,f'#rso > div:nth-child(1) > div > div > div.Z26q7c.UK95Uc.jGGQ5e > div > a > h3')
+link = driver.find_element(By.CSS_SELECTOR,f'#rso > div:nth-child(1) > div > div > div.Z26q7c.UK95Uc.jGGQ5e > div > a > h3')
 link.click()
 time.sleep(0.2)
 driver.back()
 link = driver.find_element(By.CSS_SELECTOR,f'#rso > div:nth-child(2) > div > div > div > div.Z26q7c.UK95Uc.jGGQ5e > div > a > h3')
+link.click()
+time.sleep(5)
 
 driver.quit()
