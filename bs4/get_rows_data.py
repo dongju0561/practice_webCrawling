@@ -20,6 +20,11 @@ row = rows[2]
 location_data = [tag.get_text(strip=True) for tag in row if tag.get_text(strip=True) != ""]
 # for row in rows:
 
+
+#로그 파일 생성
+#수집한 데이터의 요약내용 정리: 어떤 내용 요약?:  실패요인, 
+
+
 #     if row:
 #         element = row.get_text(strip=True)
 #         location_data.append(element)
