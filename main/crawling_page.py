@@ -6,13 +6,13 @@ ssl._create_default_https_context = ssl._create_unverified_context
 #---전역 변수---
 url = "https://www.jeongseon.go.kr/portal/jeongseongun/healthcenter/healthadmin"
 div_line = "--------------------------------------------\n"
-file_path = "/Users/DJ/Desktop/webCrawling/main_crawling/output1.txt"
+file_path = "/Users/DJ/Desktop/webCrawling/main/crawling_result.txt"
 
 #---함수---
 #반복문을 통해 selector 조정
 def iter_selector():
     selector_list = []
-    for num in range(1,10):
+    for num in range(1,15):
         selector_list.append(f"#A-Contents > div.skinMb-small > table > tbody > tr:nth-child({num}) > td")
     return selector_list
 
@@ -32,15 +32,16 @@ def init_write(file_path):
             file.writelines(init_string)
             file.writelines("\n")
             file.writelines(div_line)
-        print("파일에 쓰기가 성공적으로 완료되었습니다.")
+        print("File initialization successful.")
     except IOError:
-        print("파일에 쓰기를 할 수 없습니다.")
+        print("File initialization failed")
 
 #tbody의 일련의 td 택스트 데이터 row 구성
 def stack_row(file_path:str, target_url:str, selector:str):
     div = " | "
     row_data = "| "
     row_list = []
+    num = 0
 
     obj = makeBSOjc(target_url)
     tbody = obj.select(selector)
@@ -59,9 +60,10 @@ def stack_row(file_path:str, target_url:str, selector:str):
             file.writelines("\n")
             file.writelines(row_data)
             file.writelines("\n")
-        print("row 추가")
+            
+        print("Add row")
     except IOError:
-        print("row 추가할 수 없습니다.")
+        print("Adding row failed")
 
     """
         crawling한 데이터 list에 append하는 함수
@@ -73,12 +75,11 @@ def stack_row(file_path:str, target_url:str, selector:str):
         우선은 자료구조를 따로 사용하지 않고 string concat
     """
 
-#main
-
+#---main---
 init_write(file_path)
 
 selectors = iter_selector()
 for selector in selectors:
     stack_row(file_path,url,selector)
 
-#main end
+#---main end---
