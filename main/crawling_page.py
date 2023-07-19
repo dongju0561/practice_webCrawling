@@ -16,14 +16,15 @@ def iter_selector():
         selector_list.append(f"#A-Contents > div.skinMb-small > table > tbody > tr:nth-child({num}) > td")
     return selector_list
 
-#bs 객체 생성
+#BS 객체 생성
 def makeBSOjc(url):
-    html = urlopen(url)  
+    html = urlopen(url)
     bsObject = BeautifulSoup(html, "html.parser")
     return bsObject
 
 #파일 작성 초기화
 def init_write(file_path):
+    #file 입력
     try:
         #with open() as file file변수에 파일객체를 생성하는 코드이다 이때 with명령어를 사용함으로서 추후에 free를 해주지 않아도 된다.
         with open(file_path, 'w') as file:
@@ -49,12 +50,16 @@ def stack_row(file_path:str, target_url:str, selector:str):
     #string concat 반복
     for e in range(0,len(tbody)):
         row_list.append(tbody[e].get_text(strip=True)) #가져온 데이터 넣기
-        if tbody[e].get_text(strip=True) != "":
+        if e != 1:
             row_data += tbody[e].get_text(strip=True)
-        # else:
-        #     row_data = ""
+        else:
+            #너무 노가다이겠는걸...
+            link = obj.select_one(f"#A-Contents > div.skinMb-small > table > tbody > tr:nth-child({e+1}) > td.skinTb-sbj > a").get('href')
+            #link에 javascript:goPage2('275716')이게 존재함..
+            row_data += link
         row_data += div
 
+    #file 입력
     try:
         with open(file_path, 'a') as file:
             file.writelines("\n")
@@ -65,15 +70,15 @@ def stack_row(file_path:str, target_url:str, selector:str):
     except IOError:
         print("Adding row failed")
 
-    """
-        crawling한 데이터 list에 append하는 함수
-        
-        자료구조?? dictionary로 할까? list로 할까?
-        list:[num,title,writor,date,url]
-        dic:[num: ,title: ,writor: ,date: ,url: ]
+"""
+crawling한 데이터 list에 append하는 함수
 
-        우선은 자료구조를 따로 사용하지 않고 string concat
-    """
+자료구조?? dictionary로 할까? list로 할까?
+list:[num,title,writor,date,url]
+dic:[num: ,title: ,writor: ,date: ,url: ]
+
+우선은 자료구조를 따로 사용하지 않고 string concat
+"""
 
 #---main---
 init_write(file_path)
