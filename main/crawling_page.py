@@ -1,7 +1,21 @@
+import ssl
+import time
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-import ssl
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
 ssl._create_default_https_context = ssl._create_unverified_context
+
+driver = webdriver.Chrome()
+driver.implicitly_wait(2)
+driver.get('https://www.jeongseon.go.kr/portal/jeongseongun/healthcenter/healthadmin')
+print(driver.current_url)
+time.sleep(0.5)
+firstImage = driver.find_element(By.CSS_SELECTOR, '#A-Contents > div.skinMb-small > table > tbody > tr:nth-child(2) > td > a')
+firstImage.click()
+time.sleep(0.5)
+print(driver.current_url)
 
 #---전역 변수---
 url = "https://www.jeongseon.go.kr/portal/jeongseongun/healthcenter/healthadmin"
