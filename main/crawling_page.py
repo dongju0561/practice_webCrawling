@@ -78,9 +78,8 @@ def stack_row(file_path:str, target_url:str, selector:str):
         with open(file_path, 'a') as file:
             file.writelines("\n")
             file.writelines(row_data)
+            row_data = ""
             file.writelines("\n")
-            
-        print("Add row")
     except IOError:
         print("Adding row failed")
 

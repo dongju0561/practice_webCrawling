@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
-file_path = "/Users/DJ/Desktop/webCrawling/main/crawling_result.txt"
+file_path = "/Users/DJ/Desktop/gitRes/webCrawling/main/crawling_result.txt"
 div = " | "
 row_data = "| "
 
@@ -34,7 +34,7 @@ driver.get('https://www.chuncheon.go.kr/cityhall/citizen-participation/participa
 page_url_list = [] #pager-numlist안에 있는 url들을 담은 list
 
 # 페이저안에 있는 10개의 url데이터를 page_url_list에 추가
-span = driver.find_element(By.CSS_SELECTOR,'#main > div > div.contents-wrap > div.content > div.sub-section > div > div.pager > div.mobhide > span')
+span = driver.find_element(By.CSS_SELECTOR,'#main > div.content > div.sub-section > div > div.pager > div.mobhide > span')
 
 aS = span.find_elements(By.TAG_NAME,'a')
 for a in aS:
@@ -53,18 +53,20 @@ for url in page_url_list:
             current_class=col.get_attribute('class')
             if current_class == 'num' or current_class == '' or current_class == 'day' or current_class == 'writer dotdot' or current_class == 'view': #클래스 이름을 가지고 태그ul 안에 데이터들 중에 원하는 데이터를 골라 수집
                 print(col.text)
+                row_data += col.text
+                row_data += div
         print("---------------------------------------------------------")
-        #         row_data += col.text
-        #         row_data += div
-        # try:
-        #     with open(file_path, 'a') as file:
-        #         file.writelines("\n")
-        #         file.writelines(row_data)
-        #         file.writelines("\n")
+        
+        try:
+            with open(file_path, 'a') as file:
+                file.writelines("\n")
+                file.writelines(row_data)
+                row_data = ""
+                file.writelines("\n")
                 
-        #     print("Add row")
-        # except IOError:
-        #     print("Adding row failed")    
+            print("Add row")
+        except IOError:
+            print("Adding row failed")    
 
 
 
