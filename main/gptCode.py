@@ -1,7 +1,9 @@
+from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+import time
 
 file_path = "/Users/DJ/Desktop/gitRes/webCrawling/main/crawling_result.txt"
 div = " | "
@@ -48,7 +50,22 @@ for url in page_url_list:
     rows = ul.find_elements(By.TAG_NAME,'li')
     for row in rows:
         cols = row.find_elements(By.TAG_NAME,'span')
-        
+        i_url = row.find_element(By.TAG_NAME, 'a').get_attribute('href')
+
+        #상세 게시물 접속
+        driver.get(i_url)
+        ps = driver.find_elements(By.TAG_NAME, 'p')
+        for p in ps:
+            spans = p.find_elements(By.TAG_NAME, 'span')
+            for span in spans:
+                try: #span 내부 text가 strong태그로 감싸져 있는 경우 예외처리
+                    element = span.find_element(By.TAG_NAME,"strong")
+                except NoSuchElementException:
+                    pass
+                print(span.text)
+        driver.back()
+        #상세 게시물 접속 끝
+
         for col in cols:
             current_class=col.get_attribute('class')
             if current_class == 'num' or current_class == '' or current_class == 'day' or current_class == 'writer dotdot' or current_class == 'view': #클래스 이름을 가지고 태그ul 안에 데이터들 중에 원하는 데이터를 골라 수집
