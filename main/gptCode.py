@@ -4,6 +4,11 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import time
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+import re
 
 file_path = "/Users/DJ/Desktop/gitRes/webCrawling/main/crawling_result.txt"
 div = " | "
@@ -33,6 +38,16 @@ class Stack:
 
     def size(self):
         return len(self.stack)
+
+def makeBSOjc(url):
+    html = urlopen(url)  
+    bsObject = BeautifulSoup(html, "html.parser")
+    return bsObject
+
+#remove html tags to get only text datas
+def remove_html_tags(text):
+    clean = re.compile('<.*?>')
+    return re.sub(clean, '', text)
 
 def init_write(file_path):
     div_line = "--------------------------------------------\n"
@@ -78,38 +93,12 @@ for url in page_url_list:
         i_url = row.find_element(By.TAG_NAME, 'a').get_attribute('href')
 
         #상세 게시물 접속
-        """
-        코딩 플랜
-        상세 게시물의 내용은 태그들간 계층구조로 구성되어 있으며 높은 레벨부터 순서대로 텍스트들을 concat 작업 진행
-        """
         driver.get(i_url)
-        s = Stack()
-        ps = driver.find_elements(By.CLASS_NAME, 'boardview-con')
-        for p in ps:
-            l1s = p.find_elements(By.XPATH, './/*') #p태그 내부에 있는 모든 span태그들을 가져옴 레벨과 상관없이 그냥 다 가져옴
-            for l1 in l1s:
-                if(l1.text != ""):
-                    s.push(l1.text)
-                    print(len(s.stack))
-                    # print(s.stack)
-                    l2s = l1.find_elements(By.XPATH, './/*')
-                    for e in l2s:
-                        print(e.tag_name)
-                    for l2 in l2s:
-                        if(l2.text != ""):
-                            s.push(l2.text)
-                            l3s = l2.find_elements(By.XPATH, './/*')
-                            for l3 in l3s:
-                                if(l3.text != ""):
-                                    s.push(l3.text)
-                                    l2s = l3.find_elements(By.XPATH, './/*')
-            print(s.stack)
-            # for span in spans:
-            #     print(span.text)
-            #     try: #span 내부 text가 strong태그로 감싸져 있는 경우 예외처리
-            #         strong = span.find_element(By.TAG_NAME,"strong")
-            #     except NoSuchElementException:
-            #         pass
+        html = makeBSOjc(i_url)
+        html_content = str(html.select_one('#main > div.content > div > div.boardview > div.boardview-con'))
+        print(remove_html_tags(html_content))
+        
+        
         print("---------------------------------------------------------")
         driver.back()
         #상세 게시물 접속 끝
@@ -130,15 +119,6 @@ for url in page_url_list:
                 
         except IOError:
             print("Adding row failed")    
-
-
-
-
-
-
-
-
-
 
 
 # # 테이블 요소 가져오기
